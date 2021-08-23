@@ -1,8 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ef_core_example.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ef_core_example.Controllers
@@ -21,9 +22,12 @@ namespace ef_core_example.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            var profile = _context.Profiles.FirstOrDefault(profile => profile.Id == id);
+            var profile = await _context.Profiles
+                .Include(p => p.Depots)
+                .FirstOrDefaultAsync(profile => profile.Id == id);
+
             return Ok(profile);
         }
 
@@ -33,6 +37,29 @@ namespace ef_core_example.Controllers
             _context.SaveChanges();
 
             return Created($"{Request.Path}/{profile.Id}", profile);
+        }
+
+        [HttpPut]
+        public IActionResult Update([FromBody] Profile profile)
+        {
+            _context.Profiles.Update(profile);
+
+            Console.WriteLine(_context.ChangeTracker.DebugView.ShortView);
+            
+            _context.SaveChangesAsync();
+
+            return Ok(profile);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            var profile = _context.Profiles.FirstOrDefault(profile => profile.Id == id);
+            _context.Profiles.Remove(profile);
+            
+            _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

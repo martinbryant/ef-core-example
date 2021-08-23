@@ -1,4 +1,39 @@
-GET http://localhost:5000/profile/1
+GET http://localhost:5000/profile/2
+
+###
+
+DELETE  http://localhost:5000/profile/2
+
+###
+GET http://localhost:5000/depot/1
+
+###
+GET http://localhost:5000/listing/1
+
+###
+GET http://localhost:5000/listing/seller/1
+
+###
+
+GET http://localhost:5000/transaction/1
+
+###
+
+GET http://localhost:5000/transaction/seller/2
+
+###
+
+GET http://localhost:5000/transaction/buyer/1
+
+###
+
+GET http://localhost:5000/transaction/search
+Content-Type: application/json
+
+{
+    "FromDate" : "2021-08-02T01:01:01",
+    "ToDate" : "2021-08-04T01:01:01"
+}
 
 ###
 
@@ -6,5 +41,51 @@ POST http://localhost:5000/profile
 Content-Type: application/json
 
 {
-    "name": "Dave"
+    "name": "Alex B"
+}
+
+###
+PUT http://localhost:5000/profile
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "SOmffdr"
+}
+
+###
+
+POST http://localhost:5000/depot
+Content-Type: application/json
+
+{
+    "depotId": "Q",
+    "name": "Pete",
+    "profileId" : "e5cb7094-05f7-4c9c-c334-08d963d662b1",
+    "deliveryAddress": {
+        "address1": "Abacus",
+        "address2": "Abacus",
+        "address3": "Abacus",
+        "address4": "Abacus",
+        "postCode": "RAAAA"
+    }
+}
+
+###
+
+PUT http://localhost:5000/depot
+Content-Type: application/json
+
+{
+    "id": 1,
+    "depotId": "F",
+    "name": "Petes House",
+    "profileId" : 1,
+    "deliveryAddress": {
+        "address1": "Abac",
+        "address2": "Abacus",
+        "address3": "Abacus",
+        "address4": "Abacus",
+        "postCode": "RAAAA"
+    }
 }

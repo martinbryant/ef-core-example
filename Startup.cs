@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging;
 
 namespace ef_core_example
 {
@@ -17,17 +17,22 @@ namespace ef_core_example
 
         public IConfiguration Configuration { get; }
 
+        public static ILoggerFactory DataLogger { get; private set; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ef_core_example", Version = "v1" });
-            });
+            
+            DataLogger = LoggerFactory.Create(builder => { builder.AddFile(Configuration["Logging:DataLogger:Filepath"]);});
+
             services.AddDbContext<AppDbContext>(
-                options => options.UseMySQL(Configuration["ConnectionStrings:DefaultConnection"]));
+                options => 
+                { 
+                    options.UseMySQL(Configuration["ConnectionStrings:DefaultConnection"]);
+                    options.EnableSensitiveDataLogging();
+                    options.UseLoggerFactory(DataLogger);
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,8 +41,6 @@ namespace ef_core_example
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ef_core_example v1"));
             }
 
             app.UseHttpsRedirection();
