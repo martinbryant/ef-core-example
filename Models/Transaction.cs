@@ -10,7 +10,11 @@ namespace ef_core_example.Models
         public Depot Buyer { get; set; }
         public Listing Listing { get; set; }
 
-        public Address DeliveryAddress { get; set;}
+        public string DeliveryAddress1 { get; set; }
+        public string DeliveryAddress2 { get; set; }
+        public string DeliveryAddress3 { get; set; }
+        public string DeliveryAddress4 { get; set; }
+        public string DeliveryPostCode { get; set; }
 
         [Range(1, int.MaxValue)]
         public int Quantity { get; set; }

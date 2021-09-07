@@ -42,11 +42,11 @@ namespace ef_core_example.Controllers
         [HttpPut]
         public IActionResult Update([FromBody] Profile profile)
         {
-            _context.Profiles.Update(profile);
+            _context.Entry(profile).State = EntityState.Modified;
 
             Console.WriteLine(_context.ChangeTracker.DebugView.ShortView);
             
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return Ok(profile);
         }

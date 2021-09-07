@@ -19,18 +19,12 @@ namespace ef_core_example.Models
         [JsonIgnore]
         public Profile Profile { get; set; }
 
-        public Address DeliveryAddress { get; set; }
+        public string DeliveryAddress1 { get; set; }
+        public string DeliveryAddress2 { get; set; }
+        public string DeliveryAddress3 { get; set; }
+        public string DeliveryAddress4 { get; set; }
+        public string DeliveryPostCode { get; set; }
 
         public override string ToString() => "Depot";
-    }
-
-    [Owned]
-    public class Address
-    {
-        public string Address1 { get; set; }
-        public string Address2 { get; set; }
-        public string Address3 { get; set; }
-        public string Address4 { get; set; }
-        public string PostCode { get; set; }
     }
 }

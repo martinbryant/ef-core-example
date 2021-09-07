@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using ef_core_example.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ef_core_example.Controllers
@@ -37,11 +38,19 @@ namespace ef_core_example.Controllers
         [HttpPut]
         public IActionResult Update([FromBody] Depot depot)
         {
-            _context.Depots.Update(depot);
+            _context.Entry(depot).State = EntityState.Modified;
 
-            // depot.DeliveryAddress = address;
+            Console.WriteLine(_context.ChangeTracker.DebugView.ShortView);
 
-            _context.SaveChangesAsync();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.InnerException.Data);
+            }
+
 
             return Ok(depot);
         }

@@ -49,7 +49,7 @@ PUT http://localhost:5000/profile
 Content-Type: application/json
 
 {
-    "id": 1,
+    "id": "fed4323b-a2ac-4b41-5f81-08d966ddde42",
     "name": "SOmffdr"
 }
 
@@ -59,16 +59,14 @@ POST http://localhost:5000/depot
 Content-Type: application/json
 
 {
-    "depotId": "Q",
-    "name": "Pete",
-    "profileId" : "e5cb7094-05f7-4c9c-c334-08d963d662b1",
-    "deliveryAddress": {
-        "address1": "Abacus",
-        "address2": "Abacus",
-        "address3": "Abacus",
-        "address4": "Abacus",
-        "postCode": "RAAAA"
-    }
+    "depotId": "F",
+    "name": "Daves",
+    "profileId" : "fed4323b-a2ac-4b41-5f81-08d966ddde42",
+    "deliveryaddress1": "Abac",
+    "deliveryaddress2": "Abacus",
+    "deliveryAddress3": "Abacus",
+    "deliveryAddress4": "Abacus",
+    "deliveryPostCode": "RAAAA"
 }
 
 ###
@@ -77,15 +75,8 @@ PUT http://localhost:5000/depot
 Content-Type: application/json
 
 {
-    "id": 1,
+    "id": "f46f846a-2a5c-4363-e3da-08d966de2428",
     "depotId": "F",
-    "name": "Petes House",
-    "profileId" : 1,
-    "deliveryAddress": {
-        "address1": "Abac",
-        "address2": "Abacus",
-        "address3": "Abacus",
-        "address4": "Abacus",
-        "postCode": "RAAAA"
-    }
+    "name": "Erwfadsfdsafdsa",
+    "profileId" : "fed4323c-a2ac-4b41-5f81-08d966ddde42"
 }
