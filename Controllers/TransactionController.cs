@@ -25,35 +25,35 @@ namespace ef_core_example.Controllers
             _context = context;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAsync(int id)
-        {
-            var transaction = _context.Transactions
-                .Include(trans => trans.Buyer)
-                .Include(trans => trans.Listing)
-                .ThenInclude(listing => listing.Seller)
-                .Include(trans => trans.Listing)
-                .ThenInclude(listing => listing.Manufacturer)
-                .FirstOrDefaultAsync(trans => trans.Id == id);
+        // [HttpGet("{id}")]
+        // public async Task<IActionResult> GetAsync(int id)
+        // {
+        //     var transaction = _context.Transactions
+        //         .Include(trans => trans.Buyer)
+        //         .Include(trans => trans.Listing)
+        //         .ThenInclude(listing => listing.Seller)
+        //         .Include(trans => trans.Listing)
+        //         .ThenInclude(listing => listing.Manufacturer)
+        //         .FirstOrDefaultAsync(trans => trans.Id == id);
 
-            var result = await transaction;
+        //     var result = await transaction;
 
-            return Ok(result);
-        }
+        //     return Ok(result);
+        // }
 
-        [HttpGet("search")]    
-        public async Task<IActionResult> GetDetailed([FromBody]TransactionQuery query)
-        {
-            var transactions = await _context.Transactions.Where(trans => trans.OrderedDate >= query.FromDate && trans.OrderedDate <= query.ToDate)
-                                                    .Include(trans => trans.Buyer)
-                                                    .Include(trans => trans.Listing)
-                                                    .ThenInclude(listing => listing.Seller)
-                                                    .Include(trans => trans.Listing)
-                                                    .ThenInclude(listing => listing.Manufacturer)
-                                                    .ToListAsync();
+        // [HttpGet("search")]    
+        // public async Task<IActionResult> GetDetailed([FromBody]TransactionQuery query)
+        // {
+        //     var transactions = await _context.Transactions.Where(trans => trans.OrderedDate >= query.FromDate && trans.OrderedDate <= query.ToDate)
+        //                                             .Include(trans => trans.Buyer)
+        //                                             .Include(trans => trans.Listing)
+        //                                             .ThenInclude(listing => listing.Seller)
+        //                                             .Include(trans => trans.Listing)
+        //                                             .ThenInclude(listing => listing.Manufacturer)
+        //                                             .ToListAsync();
                     
-            return Ok(transactions);
-        }
+        //     return Ok(transactions);
+        // }
 
         // [HttpGet("buyer/{id}")]
         // public async Task<IActionResult> GetBuyers(int id)

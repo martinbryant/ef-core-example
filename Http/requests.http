@@ -1,4 +1,11 @@
-GET http://localhost:5000/profile/2
+
+
+
+GET http://localhost:5000/profile/00000000-0000-0000-0000-000000000000
+
+###
+GET http://localhost:5000/profile/aa2bd762-1453-4062-e0c9-08d973914237
+
 
 ###
 
@@ -41,7 +48,7 @@ POST http://localhost:5000/profile
 Content-Type: application/json
 
 {
-    "name": "Alex B"
+    "name": "Daves "
 }
 
 ###
@@ -49,8 +56,8 @@ PUT http://localhost:5000/profile
 Content-Type: application/json
 
 {
-    "id": "fed4323b-a2ac-4b41-5f81-08d966ddde42",
-    "name": "SOmffdr"
+    "id": "aa2bd762-1453-4062-e0c9-08d973914237",
+    "name": "Steve"
 }
 
 ###
@@ -60,13 +67,21 @@ Content-Type: application/json
 
 {
     "depotId": "F",
-    "name": "Daves",
-    "profileId" : "fed4323b-a2ac-4b41-5f81-08d966ddde42",
-    "deliveryaddress1": "Abac",
-    "deliveryaddress2": "Abacus",
+    "displayname": "Daves",
+    "profileId" : "633fd3cf-8368-4b55-1b09-08d9746f5ae1",
+    "deliveryAddress1": "Abac",
+    "deliveryAddress2": "Abacus",
     "deliveryAddress3": "Abacus",
     "deliveryAddress4": "Abacus",
-    "deliveryPostCode": "RAAAA"
+    "deliveryPostCode": "RAAAA",
+    "billingAddress1": "Abac",
+    "billingAddress2": "Abacus",
+    "billingAddress3": "Abacus",
+    "billingAddress4": "Abacus",
+    "billingPostCode": "RAAAA",
+    "contactEmail" : "mail@mb.com",
+    "contactName" : "MB",
+    "contactPhone" : "44121212"
 }
 
 ###

@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using CSharpFunctionalExtensions;
+using ef_core_example.Logic;
 using ef_core_example.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,50 +12,30 @@ namespace ef_core_example.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DepotController : ControllerBase
+    public class DepotController : MarketplaceController
     {
-        private readonly AppDbContext _context;
-        private readonly ILogger<DepotController> _logger;
+        private readonly IDepotLogic _logic;
 
-        public DepotController(AppDbContext context, ILogger<DepotController> logger)
+        public DepotController(IDepotLogic logic)
         {
-            _logger = logger;
-            _context = context;
+            _logic = logic;
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(Guid id)
-        {
-            var depot = _context.Depots.FirstOrDefault(depot => depot.Id == id);
-            return Ok(depot);
-        }
+        public async Task<IActionResult> Get(Guid id) =>
+            await _logic.GetDepot(id)
+                    .Finally(ToActionResult);
 
-        public IActionResult Post([FromBody] Depot depot)
-        {
-            _context.Depots.Add(depot);
-            _context.SaveChanges();
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] MarketplaceDepot depotDto) =>
+            await _logic.CreateDepot(depotDto)
+                    .Finally(ToActionResult);
 
-            return Created($"{Request.Path}/{depot.Id}", depot);
-        }
+        // [HttpPut]
+        // public async Task<IActionResult> Update([FromBody] MarketplaceDepot depotDto) =>
+        //     await _logic.UpdateDepot(depotDto)
+        //             .Finally(ToActionResult);
 
-        [HttpPut]
-        public IActionResult Update([FromBody] Depot depot)
-        {
-            _context.Entry(depot).State = EntityState.Modified;
-
-            Console.WriteLine(_context.ChangeTracker.DebugView.ShortView);
-
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.InnerException.Data);
-            }
-
-
-            return Ok(depot);
-        }
+        
     }
 }

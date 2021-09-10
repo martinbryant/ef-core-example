@@ -4,12 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace ef_core_example.Models
 {
-    public class Manufacturer
+    public class Manufacturer : MarketplaceModel
     {
-        [Key]
-        public int Id { get; set; }
-        
-        [MaxLength(256)]
         public string Name { get; set; }
     }
 }

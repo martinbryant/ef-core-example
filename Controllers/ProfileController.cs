@@ -1,65 +1,46 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
+using CSharpFunctionalExtensions;
+using ef_core_example.Logic;
 using ef_core_example.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace ef_core_example.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProfileController : ControllerBase
+    public class ProfileController : MarketplaceController
     {
-        private readonly AppDbContext _context;
-        private readonly ILogger<ProfileController> _logger;
+        private readonly IProfileLogic _logic;
 
-        public ProfileController(AppDbContext context, ILogger<ProfileController> logger)
+        public ProfileController(IProfileLogic logic)
         {
-            _logger = logger;
-            _context = context;
+            _logic = logic;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var profile = await _context.Profiles
-                .Include(p => p.Depots)
-                .FirstOrDefaultAsync(profile => profile.Id == id);
 
-            return Ok(profile);
+            var billing = Address.Create("Abacus", "Acorn", "", "Poole", "BH");
+            var delivery = Address.Create("Abacus", "Acorn", "Ling", "Poole", "BH");
+
+            bool equal = billing.Value == delivery.Value;
+
+            Console.WriteLine(equal ? "Adresss equal" : "Address not equal");
+
+            return await _logic.GetProfile(id)
+                    .Finally(ToActionResult);
         }
 
-        public IActionResult Post([FromBody] Profile profile)
-        {
-            _context.Profiles.Add(profile);
-            _context.SaveChanges();
-
-            return Created($"{Request.Path}/{profile.Id}", profile);
-        }
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] MarketplaceProfile profileDto) =>
+            await _logic.CreateProfile(profileDto)
+                    .Finally(ToActionResult);
 
         [HttpPut]
-        public IActionResult Update([FromBody] Profile profile)
-        {
-            _context.Entry(profile).State = EntityState.Modified;
-
-            Console.WriteLine(_context.ChangeTracker.DebugView.ShortView);
-            
-            _context.SaveChanges();
-
-            return Ok(profile);
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var profile = _context.Profiles.FirstOrDefault(profile => profile.Id == id);
-            _context.Profiles.Remove(profile);
-            
-            _context.SaveChangesAsync();
-
-            return Ok();
-        }
+        public async Task<IActionResult> Update([FromBody] MarketplaceProfile profileDto) =>
+            await _logic.UpdateProfile(profileDto)
+                .Finally(ToActionResult);
     }
 }

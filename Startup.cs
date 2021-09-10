@@ -1,3 +1,6 @@
+using ef_core_example.Logic;
+using ef_core_example.Models;
+using GoldMarketplace.ServerAPIService.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +25,13 @@ namespace ef_core_example
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                    .ConfigureApiBehaviorOptions(
+                        options =>
+                        {
+                            options.InvalidModelStateResponseFactory =  // the interjection
+                                ModelStateValidator.ValidateModelState;
+                        });
             
             DataLogger = LoggerFactory.Create(builder => { builder.AddFile(Configuration["Logging:DataLogger:Filepath"]);});
 
@@ -33,6 +42,10 @@ namespace ef_core_example
                     options.EnableSensitiveDataLogging();
                     options.UseLoggerFactory(DataLogger);
                 });
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IProfileLogic, ProfileLogic>();
+            services.AddScoped<IDepotLogic, DepotLogic>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
