@@ -12,7 +12,7 @@ namespace ef_core_example
     // public class AppDbContext : DbContextWithTriggers
     public class AppDbContext : DbContext
     {
-        
+
         private const string Guid_Column_Type = "varchar(36)";
         public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -35,7 +35,7 @@ namespace ef_core_example
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Profile>(profile => 
+            modelBuilder.Entity<Profile>(profile =>
             {
                 profile.ToTable("profile")
                         .HasKey(profile => profile.Id);
@@ -54,7 +54,10 @@ namespace ef_core_example
                 depot.ToTable("depot")
                             .HasKey(depot => depot.Id);
 
-                // depot.HasIndex
+                depot.HasOne(d => d.Profile)
+                        .WithMany();
+                // .IsRequired();
+
                 depot.Property(d => d.Id)
                         .HasColumnType(Guid_Column_Type)
                         .IsRequired();
@@ -79,7 +82,8 @@ namespace ef_core_example
                         .HasConversion(p => p.Value, p => Email.Create(p).Value)
                         .HasMaxLength(Email.Max_Email_Length);
 
-                depot.OwnsOne(d => d.DeliveryAddress, a => {
+                depot.OwnsOne(d => d.DeliveryAddress, a =>
+                {
                     a.Property(aa => aa.Address1);
                     a.Property(aa => aa.Address2);
                     a.Property(aa => aa.Address3);
@@ -87,7 +91,8 @@ namespace ef_core_example
                     a.Property(aa => aa.PostCode);
                 });
 
-                depot.OwnsOne(d => d.BillingAddress, a => {
+                depot.OwnsOne(d => d.BillingAddress, a =>
+                {
                     a.Property(aa => aa.Address1);
                     a.Property(aa => aa.Address2);
                     a.Property(aa => aa.Address3);
@@ -96,15 +101,15 @@ namespace ef_core_example
                 });
 
             });
-            
-                
+
+
             // modelBuilder.Entity<Depot>().ToTable("depot");
             // modelBuilder.Entity<Listing>().ToTable("listing");
             // modelBuilder.Entity<Transaction>().ToTable("transaction");
             // modelBuilder.Entity<Manufacturer>().ToTable("manufacturer");
             // modelBuilder.Entity<History>().ToTable("history");
         }
-	}
+    }
 
     // public class History
     // {
@@ -133,7 +138,7 @@ namespace ef_core_example
 
     // public abstract class Trackable
     // {
-        
+
     //     static Trackable()
     //     {
     //         Triggers<Trackable, AppDbContext>.Inserted += entry => 

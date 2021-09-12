@@ -27,7 +27,7 @@ namespace ef_core_example.Logic
         public async Task<Result<Depot, Error>> CreateDepot(MarketplaceDepot depotDto)
         {
             return await _profile.GetProfile(depotDto.ProfileId)
-                .Bind(_ => Depot.Create(depotDto))
+                .Bind(profile => Depot.Create(depotDto, profile))
                 .Tap(_unit.Depots.Add)
                 .Check(_unit.Commit);
         }
@@ -35,7 +35,7 @@ namespace ef_core_example.Logic
         public async Task<Result<Depot, Error>> GetDepot(Guid id)
         {
             return await _unit.Depots.Get(id)
-                            .Ensure(depot => 
+                            .Ensure(depot =>
                                         depot != null,
                                         Errors.General.NotFound(nameof(Depot), id));
         }
@@ -51,7 +51,7 @@ namespace ef_core_example.Logic
         {
             return Guid.TryParse(id, out Guid identifier)
                 ? await GetDepot(identifier)
-                : Result.Failure<Depot, Error>(Errors.General.InvalidId(nameof(Depot), id));
+                : Errors.General.InvalidId(nameof(Depot), id);
         }
     }
 }

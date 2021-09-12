@@ -17,17 +17,17 @@ namespace ef_core_example.Models
         public static Result<Email, Error> Create(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
-                return Result.Failure<Email, Error>(Errors.General.ValueIsRequired(nameof(Email)));
+                return Errors.General.ValueIsRequired(nameof(Email));
 
             string email = input.Trim();
 
             if (email.Length > Max_Email_Length)
-                return Result.Failure<Email, Error>(Errors.General.ValueIsTooLong(nameof(Email), input));
+                return Errors.General.ValueIsTooLong(nameof(Email), input);
 
             if (!Regex.IsMatch(email, @"^(.+)@(.+)$"))
-                return Result.Failure<Email, Error>(Errors.General.ValueIsInvalid(nameof(Email), input));
+                return Errors.General.ValueIsInvalid(nameof(Email), input);
 
-            return Result.Success<Email, Error>(new Email(email));
+            return new Email(email);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

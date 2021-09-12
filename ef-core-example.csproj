@@ -19,6 +19,7 @@
     <PackageReference Include="NickStrupat.EntityFrameworkCore.Triggers.AspNetCore" Version="1.0.3" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
 
 </Project>

@@ -43,16 +43,16 @@ namespace ef_core_example.Logic
         public async Task<Result<Profile, Error>> GetProfile(Guid id)
         {
             return await _unit.Profiles.Get(id)
-                            .Ensure(profile => 
-                                        profile != null, 
+                            .Ensure(profile =>
+                                        profile != null,
                                         Errors.General.NotFound(nameof(Profile), id));
         }
-        
+
         public async Task<Result<Profile, Error>> GetProfile(string id)
         {
             return Guid.TryParse(id, out Guid identifier)
                 ? await GetProfile(identifier)
-                : Result.Failure<Profile, Error>(Errors.General.InvalidId(nameof(Profile), id));
+                : Errors.General.InvalidId(nameof(Profile), id);
         }
     }
 }

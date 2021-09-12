@@ -5,8 +5,8 @@ namespace ef_core_example.Models
 {
     public class Address : ValueObject
     {
-        public const int Max_Address_Line_Length    = 33;
-        public const int Max_PostCode_Length        = 8;
+        public const int Max_Address_Line_Length = 33;
+        public const int Max_PostCode_Length = 8;
 
         private Address(string add1, string add2, string add3, string add4, string pcode)
         {
@@ -17,7 +17,7 @@ namespace ef_core_example.Models
             PostCode = pcode;
         }
 
-        public Address() {}
+        public Address() { }
 
         public string Address1 { get; private set; }
         public string Address2 { get; private set; }
@@ -36,25 +36,25 @@ namespace ef_core_example.Models
 
         public static Result<Address, Error> Create(string add1, string add2, string add3, string add4, string pcode)
         {
-            if(string.IsNullOrWhiteSpace(add1))
-                return Result.Failure<Address, Error>(Errors.General.ValueIsRequired(nameof(Address1)));
-            
-            if(string.IsNullOrWhiteSpace(add2))
-                return Result.Failure<Address, Error>(Errors.General.ValueIsRequired(nameof(Address2)));
+            if (string.IsNullOrWhiteSpace(add1))
+                return Errors.General.ValueIsRequired(nameof(Address1));
 
-            if(string.IsNullOrWhiteSpace(pcode))
-                return Result.Failure<Address, Error>(Errors.General.ValueIsRequired(nameof(Address1)));
+            if (string.IsNullOrWhiteSpace(add2))
+                return Errors.General.ValueIsRequired(nameof(Address2));
 
-            if(add1.Length > Max_Address_Line_Length)
-                return Result.Failure<Address, Error>(Errors.General.ValueIsTooLong(nameof(Address1), add1));
-            
-            if(add2.Length > Max_Address_Line_Length)
-                return Result.Failure<Address, Error>(Errors.General.ValueIsTooLong(nameof(Address2), add2));
-            
-            if(pcode.Length > Max_PostCode_Length)
-                return Result.Failure<Address, Error>(Errors.General.ValueIsTooLong(nameof(PostCode), pcode));
+            if (string.IsNullOrWhiteSpace(pcode))
+                return Errors.General.ValueIsRequired(nameof(Address1));
 
-            return Result.Success<Address, Error>(new Address(add1, add2, add3, add4, pcode));
+            if (add1.Length > Max_Address_Line_Length)
+                return Errors.General.ValueIsTooLong(nameof(Address1), add1);
+
+            if (add2.Length > Max_Address_Line_Length)
+                return Errors.General.ValueIsTooLong(nameof(Address2), add2);
+
+            if (pcode.Length > Max_PostCode_Length)
+                return Errors.General.ValueIsTooLong(nameof(PostCode), pcode);
+
+            return new Address(add1, add2, add3, add4, pcode);
         }
     }
 }

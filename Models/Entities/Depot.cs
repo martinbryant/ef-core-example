@@ -5,32 +5,34 @@ namespace ef_core_example.Models
 {
     public class Depot : MarketplaceModel
     {
-        public const int Max_DisplayName_Length     = 29;
-        public const int Max_ContactName_Length     = 41;
-        public const int Max_ContactPhone_Length    = 28;
-        public const int Max_DepotId_Length         = 1;
+        public const int Max_DisplayName_Length = 29;
+        public const int Max_ContactName_Length = 41;
+        public const int Max_ContactPhone_Length = 28;
+        public const int Max_DepotId_Length = 1;
 
         private Depot(
-                Address delivery, 
-                Address billing, 
-                string depotId, 
-                string displayName, 
-                string contactName, 
+                Profile profile,
+                Address delivery,
+                Address billing,
+                string depotId,
+                string displayName,
+                string contactName,
                 Email contactEmail,
                 string contactPhone)
         {
+            Profile = Profile;
             DeliveryAddress = delivery;
-            BillingAddress  = billing;
-            DepotId         = depotId;
-            DisplayName     = displayName;
-            ContactName     = contactName;
-            ContactEmail    = contactEmail;
-            ContactPhone    = contactPhone;
+            BillingAddress = billing;
+            DepotId = depotId;
+            DisplayName = displayName;
+            ContactName = contactName;
+            ContactEmail = contactEmail;
+            ContactPhone = contactPhone;
         }
 
-        private Depot(){}
+        private Depot() { }
 
-        public Guid ProfileId { get; }
+        public Profile Profile { get; private set; }
 
         public string DepotId { get; private set; }
 
@@ -54,25 +56,25 @@ namespace ef_core_example.Models
         //     var email = Email.Create(depotDto?.ContactEmail);
         // }
 
-        internal static Result<Depot, Error> Create(MarketplaceDepot depotDto)
+        internal static Result<Depot, Error> Create(MarketplaceDepot depotDto, Profile profile)
         {
-            var delivery    = Address.Create(
-                                    depotDto.DeliveryAddress1, 
-                                    depotDto.DeliveryAddress2, 
-                                    depotDto.DeliveryAddress3, 
-                                    depotDto.DeliveryAddress4, 
+            var delivery = Address.Create(
+                                    depotDto.DeliveryAddress1,
+                                    depotDto.DeliveryAddress2,
+                                    depotDto.DeliveryAddress3,
+                                    depotDto.DeliveryAddress4,
                                     depotDto.DeliveryPostCode);
 
-            var billing     = Address.Create(
-                                    depotDto.BillingAddress1, 
-                                    depotDto.BillingAddress2, 
-                                    depotDto.BillingAddress3, 
-                                    depotDto.BillingAddress4, 
+            var billing = Address.Create(
+                                    depotDto.BillingAddress1,
+                                    depotDto.BillingAddress2,
+                                    depotDto.BillingAddress3,
+                                    depotDto.BillingAddress4,
                                     depotDto.BillingPostCode);
 
             var contactEmail = Email.Create(depotDto.ContactEmail);
 
-            var depotId     = depotDto.DepotId;
+            var depotId = depotDto.DepotId;
             var displayName = depotDto.DisplayName;
             var contactName = depotDto.ContactName;
             var contactPhone = depotDto.ContactPhone;
@@ -80,7 +82,7 @@ namespace ef_core_example.Models
             return delivery
                     .Bind(_ => billing)
                     .Bind(_ => contactEmail)
-                    .Map(_ => new Depot(delivery.Value, billing.Value, depotId, displayName, contactName, contactEmail.Value, contactPhone));
+                    .Map(_ => new Depot(profile, delivery.Value, billing.Value, depotId, displayName, contactName, contactEmail.Value, contactPhone));
         }
     }
 }
