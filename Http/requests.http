@@ -4,7 +4,7 @@
 GET http://localhost:5000/profile/00000000-0000-0000-0000-000000000000
 
 ###
-GET http://localhost:5000/profile/3bb5be38-be5e-442f-83ed-08d9747d2e74
+GET https://localhost:5001/profile/6558ab54-d78a-404b-754d-08d9747e07f8
 
 
 ###
@@ -48,7 +48,7 @@ POST http://localhost:5000/profile
 Content-Type: application/json
 
 {
-    "name": "Daves "
+    "name": 1
 }
 
 ###

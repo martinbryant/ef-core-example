@@ -18,9 +18,16 @@ namespace ef_core_example
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging((hostingContext, builder) =>
+                {
+                    var file = hostingContext.Configuration["Logging:DataLogger:Filepath"];
+                    builder.AddFile(file, isJson: true);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+
     }
 }

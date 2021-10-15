@@ -21,14 +21,6 @@ namespace ef_core_example.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-
-            var billing = Address.Create("Abacus", "Acorn", "", "Poole", "BH");
-            var delivery = Address.Create("Abacus", "Acorn", "Ling", "Poole", "BH");
-
-            bool equal = billing.Value == delivery.Value;
-
-            Console.WriteLine(equal ? "Adresss equal" : "Address not equal");
-
             return await _logic.GetProfile(id)
                     .Finally(ToActionResult);
         }

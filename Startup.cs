@@ -32,15 +32,19 @@ namespace ef_core_example
                             options.InvalidModelStateResponseFactory =  // the interjection
                                 ModelStateValidator.ValidateModelState;
                         });
-            
-            DataLogger = LoggerFactory.Create(builder => { builder.AddFile(Configuration["Logging:DataLogger:Filepath"]);});
+
+            //             DataLogger = LoggerFactory.Create(builder =>
+            //             {
+            //                 builder.AddFile(Configuration["Logging:DataLogger:Filepath"],
+            // isJson: true,
+            // outputTemplate: "{Timestamp:o} {RequestId,8} [{Level:u3}] {Message} ({EventId:x8}){NewLine}{Exception}");
+            //             });
 
             services.AddDbContext<AppDbContext>(
-                options => 
-                { 
+                options =>
+                {
                     options.UseMySQL(Configuration["ConnectionStrings:DefaultConnection"]);
                     options.EnableSensitiveDataLogging();
-                    options.UseLoggerFactory(DataLogger);
                 });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -49,14 +53,17 @@ namespace ef_core_example
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
+
+            app.UseRequestResponseLogger(logger);
 
             app.UseRouting();
 
