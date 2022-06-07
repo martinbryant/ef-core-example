@@ -50,6 +50,8 @@ namespace ef_core_example
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProfileLogic, ProfileLogic>();
             services.AddScoped<IDepotLogic, DepotLogic>();
+
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,9 +63,9 @@ namespace ef_core_example
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
-            app.UseRequestResponseLogger(logger);
+            // app.UseRequestResponseLogger(logger);
 
             app.UseRouting();
 

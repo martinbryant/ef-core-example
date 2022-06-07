@@ -18,12 +18,14 @@ namespace ef_core_example
         : base(options)
         {
             // Database.EnsureDeleted();
-            // Database.EnsureCreated();
+            Database.EnsureCreated();
         }
 
         public virtual DbSet<Profile> Profiles { get; set; }
 
         public virtual DbSet<Depot> Depots { get; set; }
+
+        public virtual DbSet<Order> Orders { get; set; }
 
         // public virtual DbSet<Listing> Listings { get; set; }
 
@@ -35,6 +37,27 @@ namespace ef_core_example
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Order>(order =>
+            {
+                order.ToTable("order")
+                        .HasKey(order => new { order.Id, order.Status });
+
+                order.Property(o => o.Id)
+                        .HasColumnType(Guid_Column_Type)
+                        .IsRequired();
+                order.Property(o => o.Status)
+                        .IsRequired();
+                order.Property(o => o.ActionedOn)
+                        .IsRequired();
+            });
+
+            modelBuilder.Entity<Order>().HasData(
+                    new Order() { Id = Guid.Parse("0155c260-e10e-4be5-19c3-08d98c18362b"), Status = OrderStatus.Reserved, ActionedOn = DateTime.Now },
+                    new Order() { Id = Guid.Parse("0155c260-e10e-4be5-19c3-08d98c18362b"), Status = OrderStatus.Confirmed, ActionedOn = DateTime.Now },
+                    new Order() { Id = Guid.Parse("6558ab54-d78a-404b-754d-08d9747e07f8"), Status = OrderStatus.Reserved, ActionedOn = DateTime.Now },
+                    new Order() { Id = Guid.Parse("a0669672-483b-4fbd-958b-20d5cccfdc03"), Status = OrderStatus.Reserved, ActionedOn = DateTime.MinValue }
+            );
+
             modelBuilder.Entity<Profile>(profile =>
             {
                 profile.ToTable("profile")
@@ -129,11 +152,11 @@ namespace ef_core_example
     // }
 
     // public class MarketplaceModel : Trackable
-    public class MarketplaceModel : Entity<Guid>
+    public class MarketplaceModel
     {
         [Key]
         [Column(TypeName = "varchar(36)")]
-        public override Guid Id { get; protected set; }
+        public Guid Id { get; set; }
     }
 
     // public abstract class Trackable

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ef_core_example.Models;
@@ -15,6 +16,8 @@ namespace ef_core_example.Logic
         Task<Result<Profile, Error>> CreateProfile(MarketplaceProfile profileDto);
 
         Task<Result<Profile, Error>> UpdateProfile(MarketplaceProfile profileDto);
+
+        Task<Result<IEnumerable<Order>, Error>> GetOldOrders();
     }
 
     public class ProfileLogic : IProfileLogic
@@ -53,6 +56,12 @@ namespace ef_core_example.Logic
             return Guid.TryParse(id, out Guid identifier)
                 ? await GetProfile(identifier)
                 : Errors.General.InvalidId(nameof(Profile), id);
+        }
+
+        public async Task<Result<IEnumerable<Order>, Error>> GetOldOrders()
+        {
+            return await _unit.Orders.GetOldReserved()
+                            .ToResult();
         }
     }
 }

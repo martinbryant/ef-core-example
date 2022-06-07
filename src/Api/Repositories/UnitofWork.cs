@@ -6,7 +6,7 @@ using ef_core_example.Models;
 namespace GoldMarketplace.ServerAPIService.Repositories
 {
     public interface IUnitOfWork
-    {   
+    {
         IProfileRepository Profiles { get; }
 
         IDepotRepository Depots { get; }
@@ -16,6 +16,7 @@ namespace GoldMarketplace.ServerAPIService.Repositories
         IListingRepository Listings { get; }
 
         ITransactionRepository Transactions { get; }
+        IOrderRepository Orders { get; }
 
         Task<Result<TEntity, Error>> Commit<TEntity>(TEntity entity);
     }
@@ -33,7 +34,7 @@ namespace GoldMarketplace.ServerAPIService.Repositories
         private IListingRepository _listingRepository;
 
         private ITransactionRepository _transactionRepository;
-
+        private IOrderRepository _orderRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -49,10 +50,11 @@ namespace GoldMarketplace.ServerAPIService.Repositories
         public IListingRepository Listings => _listingRepository ?? new ListingRepository(_context);
 
         public ITransactionRepository Transactions => _transactionRepository ?? new TransactionRepository(_context);
+        public IOrderRepository Orders => _orderRepository ?? new OrderRepository(_context);
 
 
-    
-        public async Task<Result<TEntity, Error>> Commit<TEntity>(TEntity entity) => 
+
+        public async Task<Result<TEntity, Error>> Commit<TEntity>(TEntity entity) =>
             await _context.SaveChangesAsync()
                     .ToResult(entity);
     }
