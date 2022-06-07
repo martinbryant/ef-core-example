@@ -11,8 +11,8 @@ namespace ef_core_example.Models
             public const string Record_Not_Found    = "record.not.found";
             public const string Id_Is_Invalid       = "id.is.invalid";
             public const string Value_Is_Required   = "value.is.required";
-            private const string Value_Is_Too_Long  = "value.is.too.long";
-            private const string Value_Is_Invalid   = "value.is.invalid";
+            public const string Value_Is_Too_Long   = "value.is.too.long";
+            public const string Value_Is_Invalid    = "value.is.invalid";
 
             public static Error NotFound(string entityName, Guid id) => 
                 new Error(Record_Not_Found, $"`{entityName}` with an id `{id}` does not exist");

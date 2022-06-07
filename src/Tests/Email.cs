@@ -1,5 +1,4 @@
 using ef_core_example.Models;
-using Xunit;
 
 namespace ef_core_example.Tests
 {
@@ -10,21 +9,24 @@ namespace ef_core_example.Tests
 
         }
 
-        [InlineData("mail@mail.net", "mail@mail.net")]
-        [InlineData("mail@mail.net     ", "mail@mail.net")]
-        [InlineData("     mail@mail.net", "mail@mail.net")]
-        [Theory]
-        public void ValidEmail(string givenEmail, string expected)
+        [InlineData("mail@mail.net")]
+        [InlineData("mail@mail.net     ")]
+        [InlineData("     mail@mail.net")]
+        [Theory(DisplayName = "[Email] - creates an email")]
+        public void ValidEmail(string givenEmail)
         {
+            var expected = "mail@mail.net";
             var result = Email.Create(givenEmail);
 
             Assert.Equal(expected, result.Value);
         }
 
-        [InlineData("mailmail.net", "value.is.invalid")]
-        [InlineData("mailmail.net", "value.is.invalid")]
-        [InlineData("mailmail.net", "value.is.invalid")]
-        [Theory]
+        [InlineData("mailmail.net"  , Errors.General.Value_Is_Invalid)]
+        [InlineData(null            , Errors.General.Value_Is_Required)]
+        [InlineData(""              , Errors.General.Value_Is_Required)]
+        [InlineData("    "          , Errors.General.Value_Is_Required)]
+        [InlineData("12345678901234567890123456", Errors.General.Value_Is_Too_Long)]
+        [Theory(DisplayName = "[Email] - Invalid email")]
         public void InvalidEmail(string givenEmail, string expected)
         {
             var result = Email.Create(givenEmail);

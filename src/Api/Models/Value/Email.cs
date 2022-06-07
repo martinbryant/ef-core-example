@@ -6,7 +6,7 @@ namespace ef_core_example.Models
 {
     public class Email : ValueObject
     {
-        public const int Max_Email_Length = 256;
+        public const int Max_Email_Length = 25;
         public string Value { get; }
 
         private Email(string value)
