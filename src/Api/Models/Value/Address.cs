@@ -17,8 +17,6 @@ namespace ef_core_example.Models
             PostCode = pcode;
         }
 
-        public Address() { }
-
         public string Address1 { get; private set; }
         public string Address2 { get; private set; }
         public string Address3 { get; private set; }
@@ -34,27 +32,32 @@ namespace ef_core_example.Models
             yield return PostCode;
         }
 
-        public static Result<Address, Error> Create(string add1, string add2, string add3, string add4, string pcode)
+        public static Result<Address, Error> Create(AddressDto addressDto)
         {
-            if (string.IsNullOrWhiteSpace(add1))
+            if (string.IsNullOrWhiteSpace(addressDto.Address1))
                 return Errors.General.ValueIsRequired(nameof(Address1));
 
-            if (string.IsNullOrWhiteSpace(add2))
+            if (string.IsNullOrWhiteSpace(addressDto.Address2))
                 return Errors.General.ValueIsRequired(nameof(Address2));
 
-            if (string.IsNullOrWhiteSpace(pcode))
+            if (string.IsNullOrWhiteSpace(addressDto.PostCode))
                 return Errors.General.ValueIsRequired(nameof(Address1));
 
-            if (add1.Length > Max_Address_Line_Length)
-                return Errors.General.ValueIsTooLong(nameof(Address1), add1);
+            if (addressDto.Address1.Length > Max_Address_Line_Length)
+                return Errors.General.ValueIsTooLong(nameof(Address1), addressDto.Address1);
 
-            if (add2.Length > Max_Address_Line_Length)
-                return Errors.General.ValueIsTooLong(nameof(Address2), add2);
+            if (addressDto.Address2.Length > Max_Address_Line_Length)
+                return Errors.General.ValueIsTooLong(nameof(Address2), addressDto.Address2);
 
-            if (pcode.Length > Max_PostCode_Length)
-                return Errors.General.ValueIsTooLong(nameof(PostCode), pcode);
+            if (addressDto.PostCode.Length > Max_PostCode_Length)
+                return Errors.General.ValueIsTooLong(nameof(PostCode), addressDto.PostCode);
 
-            return new Address(add1, add2, add3, add4, pcode);
+            return new Address(
+                addressDto.Address1, 
+                addressDto.Address2, 
+                addressDto.Address3, 
+                addressDto.Address4, 
+                addressDto.PostCode);
         }
     }
 }

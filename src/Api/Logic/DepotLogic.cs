@@ -8,7 +8,7 @@ namespace ef_core_example.Logic
 {
     public interface IDepotLogic
     {
-        Task<Result<Depot, Error>> CreateDepot(MarketplaceDepot depotDto);
+        // Task<Result<Depot, Error>> CreateDepot(MarketplaceDepot depotDto);
         Task<Result<Depot, Error>> GetDepot(Guid id);
         // Task<Result<Depot, Error>> UpdateDepot(MarketplaceDepot depotDto);
     }
@@ -24,13 +24,13 @@ namespace ef_core_example.Logic
             _profile = profile;
         }
 
-        public async Task<Result<Depot, Error>> CreateDepot(MarketplaceDepot depotDto)
-        {
-            return await _profile.GetProfile(depotDto.ProfileId)
-                .Bind(profile => Depot.Create(depotDto, profile))
-                .Tap(_unit.Depots.Add)
-                .Check(_unit.Commit);
-        }
+        // public async Task<Result<Depot, Error>> CreateDepot(MarketplaceDepot depotDto)
+        // {
+        //     return await _profile.GetProfile(depotDto.ProfileId)
+        //         .Bind(profile => Depot.Create(depotDto, profile))
+        //         .Tap(_unit.Depots.Add)
+        //         .Check(_unit.Commit);
+        // }
 
         public async Task<Result<Depot, Error>> GetDepot(Guid id)
         {

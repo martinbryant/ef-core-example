@@ -56,33 +56,33 @@ namespace ef_core_example.Models
         //     var email = Email.Create(depotDto?.ContactEmail);
         // }
 
-        internal static Result<Depot, Error> Create(MarketplaceDepot depotDto, Profile profile)
-        {
-            var delivery = Address.Create(
-                                    depotDto.DeliveryAddress1,
-                                    depotDto.DeliveryAddress2,
-                                    depotDto.DeliveryAddress3,
-                                    depotDto.DeliveryAddress4,
-                                    depotDto.DeliveryPostCode);
+        // internal static Result<Depot, Error> Create(MarketplaceDepot depotDto, Profile profile)
+        // {
+        //     var delivery = Address.Create(
+        //                             depotDto.DeliveryAddress1,
+        //                             depotDto.DeliveryAddress2,
+        //                             depotDto.DeliveryAddress3,
+        //                             depotDto.DeliveryAddress4,
+        //                             depotDto.DeliveryPostCode);
 
-            var billing = Address.Create(
-                                    depotDto.BillingAddress1,
-                                    depotDto.BillingAddress2,
-                                    depotDto.BillingAddress3,
-                                    depotDto.BillingAddress4,
-                                    depotDto.BillingPostCode);
+        //     var billing = Address.Create(
+        //                             depotDto.BillingAddress1,
+        //                             depotDto.BillingAddress2,
+        //                             depotDto.BillingAddress3,
+        //                             depotDto.BillingAddress4,
+        //                             depotDto.BillingPostCode);
 
-            var contactEmail = Email.Create(depotDto.ContactEmail);
+        //     var contactEmail = Email.Create(depotDto.ContactEmail);
 
-            var depotId = depotDto.DepotId;
-            var displayName = depotDto.DisplayName;
-            var contactName = depotDto.ContactName;
-            var contactPhone = depotDto.ContactPhone;
+        //     var depotId = depotDto.DepotId;
+        //     var displayName = depotDto.DisplayName;
+        //     var contactName = depotDto.ContactName;
+        //     var contactPhone = depotDto.ContactPhone;
 
-            return delivery
-                    .Bind(_ => billing)
-                    .Bind(_ => contactEmail)
-                    .Map(_ => new Depot(profile, delivery.Value, billing.Value, depotId, displayName, contactName, contactEmail.Value, contactPhone));
-        }
+        //     return delivery
+        //             .Bind(_ => billing)
+        //             .Bind(_ => contactEmail)
+        //             .Map(_ => new Depot(profile, delivery.Value, billing.Value, depotId, displayName, contactName, contactEmail.Value, contactPhone));
+        // }
     }
 }

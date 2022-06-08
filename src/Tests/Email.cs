@@ -18,6 +18,7 @@ namespace ef_core_example.Tests
             var expected = "mail@mail.net";
             var result = Email.Create(givenEmail);
 
+            Assert.True(result.IsSuccess);
             Assert.Equal(expected, result.Value);
         }
 
