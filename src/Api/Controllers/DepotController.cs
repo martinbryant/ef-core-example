@@ -26,13 +26,13 @@ namespace ef_core_example.Controllers
             await _logic.GetDepot(id)
                     .Finally(ToActionResult);
 
-        // [HttpPost]
-        // public async Task<IActionResult> Post([FromBody] MarketplaceDepot depotDto) =>
-        //     await _logic.CreateDepot(depotDto)
-        //             .Finally(ToActionResult);
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] DepotDto depotDto) =>
+            await _logic.CreateDepot(depotDto)
+                    .Finally(ToActionResult);
 
         // [HttpPut]
-        // public async Task<IActionResult> Update([FromBody] MarketplaceDepot depotDto) =>
+        // public async Task<IActionResult> Update([FromBody] DepotDto depotDto) =>
         //     await _logic.UpdateDepot(depotDto)
         //             .Finally(ToActionResult);
 

@@ -1,6 +1,6 @@
 namespace ef_core_example.Models
 {
-    public class MarketplaceDepot
+    public class DepotDto
     {
         public string DepotId { get; set; }
 
@@ -14,25 +14,9 @@ namespace ef_core_example.Models
 
         public string ContactEmail { get; set; }
 
-        public string DeliveryAddress1 { get; set; }
+        public AddressDto DeliveryAddress { get; set; }
 
-        public string DeliveryAddress2 { get; set; }
-
-        public string DeliveryAddress3 { get; set; }
-
-        public string DeliveryAddress4 { get; set; }
-
-        public string DeliveryPostCode { get; set; }
-
-        public string BillingAddress1 { get; set; }
-
-        public string BillingAddress2 { get; set; }
-
-        public string BillingAddress3 { get; set; }
-
-        public string BillingAddress4 { get; set; }
-
-        public string BillingPostCode { get; set; }
+        public AddressDto BillingAddress { get; set; }
         
         public string DeliveryTerms { get; set; }
 
