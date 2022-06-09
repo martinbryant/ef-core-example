@@ -32,15 +32,15 @@ namespace ef_core_example.Logic
         public async Task<Result<Profile, Error>> CreateProfile(MarketplaceProfile profileDto)
         {
             return await Profile.Create(profileDto.Name)
-                            .Tap(_unit.Profiles.Add)
-                            .Check(_unit.Commit);
+                                .Tap(_unit.Profiles.Add)
+                                .Tap(_unit.Commit);
         }
 
         public async Task<Result<Profile, Error>> UpdateProfile(MarketplaceProfile profileDto)
         {
             return await GetProfile(profileDto.Id)
-                            .Check(profile => Profile.EditName(profile, profileDto.Name))
-                            .Check(_unit.Commit);
+                            .Bind(profile => Profile.EditName(profile, profileDto.Name))
+                            .Tap(_unit.Commit);
         }
 
         public async Task<Result<Profile, Error>> GetProfile(Guid id)

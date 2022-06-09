@@ -27,9 +27,9 @@ namespace ef_core_example.Logic
         public async Task<Result<Depot, Error>> CreateDepot(DepotDto depotDto)
         {
             return await _profile.GetProfile(depotDto.ProfileId)
-                .Bind(profile => Depot.Create(depotDto, profile))
-                .Tap(_unit.Depots.Add)
-                .Check(_unit.Commit);
+                                    .Bind(profile => Depot.Create(depotDto, profile))
+                                    .Tap(_unit.Depots.Add)
+                                    .Tap(_unit.Commit);
         }
 
         public async Task<Result<Depot, Error>> GetDepot(Guid id)

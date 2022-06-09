@@ -18,7 +18,7 @@ namespace GoldMarketplace.ServerAPIService.Repositories
         ITransactionRepository Transactions { get; }
         IOrderRepository Orders { get; }
 
-        Task<Result<TEntity, Error>> Commit<TEntity>(TEntity entity);
+        Task Commit();
     }
 
     public class UnitOfWork : IUnitOfWork
@@ -54,8 +54,7 @@ namespace GoldMarketplace.ServerAPIService.Repositories
 
 
 
-        public async Task<Result<TEntity, Error>> Commit<TEntity>(TEntity entity) =>
-            await _context.SaveChangesAsync()
-                    .ToResult(entity);
+        public async Task Commit() =>
+            await _context.SaveChangesAsync();
     }
 }
