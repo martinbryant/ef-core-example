@@ -40,7 +40,7 @@ namespace GoldMarketplace.ServerAPIService.Repositories
         {
             _context = context;
         }
-
+        //Do assignments to the private fields here 
         public IProfileRepository Profiles => _profileRepository ?? new ProfileRepository(_context);
 
         public IDepotRepository Depots => _depotRepository ?? new DepotRepository(_context);
