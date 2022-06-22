@@ -18,7 +18,7 @@ namespace GoldMarketplace.ServerAPIService.Repositories
 
         void Delete(TEntity entity);
 
-        Task<Result<TEntity, Error>> Get(Guid id);
+        Task<Maybe<TEntity>> Get(Guid id);
 
         Task<IEnumerable<TEntity>> GetAll();
 
@@ -51,11 +51,9 @@ namespace GoldMarketplace.ServerAPIService.Repositories
             _context.Remove(entity);
         }
 
-        public virtual async Task<Result<TEntity, Error>> Get(Guid id)
+        public virtual async Task<Maybe<TEntity>> Get(Guid id)
         {
-            return await _context.FindAsync<TEntity>(id)
-                                    .AsTask()
-                                    .ToResult();
+            return await _context.FindAsync<TEntity>(id);
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAll()

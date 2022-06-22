@@ -35,9 +35,7 @@ namespace ef_core_example.Logic
         public async Task<Result<Depot, Error>> GetDepot(Guid id)
         {
             return await _unit.Depots.Get(id)
-                            .Ensure(depot =>
-                                        depot != null,
-                                        Errors.General.NotFound(nameof(Depot), id));
+                            .ToResult(Errors.General.NotFound(nameof(Depot), id));
         }
 
         // public async Task<Result<Depot, Error>> UpdateDepot(DepotDto depotDto)

@@ -46,9 +46,7 @@ namespace ef_core_example.Logic
         public async Task<Result<Profile, Error>> GetProfile(Guid id)
         {
             return await _unit.Profiles.Get(id)
-                            .Ensure(profile =>
-                                        profile != null,
-                                        Errors.General.NotFound(nameof(Profile), id));
+                            .ToResult(Errors.General.NotFound(nameof(Profile), id));
         }
 
         public async Task<Result<Profile, Error>> GetProfile(string id)

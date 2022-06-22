@@ -19,11 +19,9 @@ namespace ef_core_example.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            return await _logic.GetProfile(id)
+        public async Task<IActionResult> Get(Guid id) => 
+            await _logic.GetProfile(id)
                     .Finally(ToActionResult);
-        }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MarketplaceProfile profileDto) =>
