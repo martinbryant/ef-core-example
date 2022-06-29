@@ -64,6 +64,53 @@ namespace ef_core_example.Tests
 
         }
 
+        [Fact(DisplayName = "[DepotLogic] - Create depot fails as already exists")]
+        public async Task CreateDepotFailsAsAlreadyExists()
+        {
+            //Arrange
+            var mockProfile = _mock.GetMock<IProfileLogic>();
+            var mockUnit    = _mock.GetMock<IUnitOfWork>();
+
+            mockProfile.Setup(profile => profile.GetProfile(It.IsAny<string>()))
+                        .ReturnsAsync(Profile.Create("valid"));
+
+            mockUnit.Setup(unit => unit.Commit());
+            mockUnit.Setup(unit => unit.Depots.Add(It.IsAny<Depot>()));
+            
+            var existingDepotDto = ValidDepotDto;
+            
+            var existingDepot = Depot.Create(existingDepotDto, Profile.Create("Valid").Value).Value;
+
+            var depots = new List<Depot>()
+            {
+                existingDepot
+            };
+
+            var mockDepotQueryable = depots.BuildMock();
+
+            mockUnit.Setup(unit => unit.Depots.AsQueryable())
+                    .Returns(mockDepotQueryable);
+            
+            var logic = _mock.CreateInstance<DepotLogic>();
+
+            var depotDto = ValidDepotDto;
+
+            //Act
+            var result = await logic.CreateDepot(depotDto);
+
+            //Assert
+            Assert.Equal(Errors.Depot.Depot_Already_Exists, result.Error.Code);
+            mockProfile.Verify(profile => profile.GetProfile(It.IsAny<string>()),
+                Times.Once);
+            mockUnit.Verify(unit => unit.Depots.AsQueryable(), 
+                Times.Once);
+            mockUnit.Verify(unit => unit.Depots.Add(It.IsAny<Depot>()), 
+                Times.Never);
+            mockUnit.Verify(unit => unit.Commit(), 
+                Times.Never);
+
+        }
+
         [Fact(DisplayName = "[DepotLogic] - Create depot profile not found")]
         public async Task CreateDepotProfileNotFound()
         {
