@@ -1,6 +1,7 @@
 using ef_core_example.Logic;
 using ef_core_example.Models;
 using GoldMarketplace.ServerAPIService.Repositories;
+using MockQueryable.Moq;
 using Moq;
 using Moq.AutoMock;
 
@@ -28,6 +29,21 @@ namespace ef_core_example.Tests
             mockUnit.Setup(unit => unit.Commit());
             mockUnit.Setup(unit => unit.Depots.Add(It.IsAny<Depot>()));
             
+            var existingDepotDto = ValidDepotDto;
+            existingDepotDto.DepotId = "B";
+            
+            var existingDepot = Depot.Create(existingDepotDto, Profile.Create("Valid").Value).Value;
+
+            var depots = new List<Depot>()
+            {
+                existingDepot
+            };
+
+            var mockDepotQueryable = depots.BuildMock();
+
+            mockUnit.Setup(unit => unit.Depots.AsQueryable())
+                    .Returns(mockDepotQueryable);
+            
             var logic = _mock.CreateInstance<DepotLogic>();
 
             var depotDto = ValidDepotDto;
@@ -38,6 +54,8 @@ namespace ef_core_example.Tests
             //Assert
             Assert.True(result.IsSuccess);
             mockProfile.Verify(profile => profile.GetProfile(It.IsAny<string>()),
+                Times.Once);
+            mockUnit.Verify(unit => unit.Depots.AsQueryable(), 
                 Times.Once);
             mockUnit.Verify(unit => unit.Depots.Add(It.IsAny<Depot>()), 
                 Times.Once);
@@ -70,6 +88,8 @@ namespace ef_core_example.Tests
             Assert.Equal(Errors.General.Record_Not_Found, result.Error.Code);
             mockProfile.Verify(profile => profile.GetProfile(It.IsAny<string>()),
                 Times.Once);
+            mockUnit.Verify(unit => unit.Depots.AsQueryable(), 
+                Times.Never);
             mockUnit.Verify(unit => unit.Depots.Add(It.IsAny<Depot>()), 
                 Times.Never);
             mockUnit.Verify(unit => unit.Commit(), 
@@ -102,6 +122,8 @@ namespace ef_core_example.Tests
             Assert.Equal(Errors.General.Value_Is_Required, result.Error.Code);
             mockProfile.Verify(profile => profile.GetProfile(It.IsAny<string>()),
                 Times.Once);
+            mockUnit.Verify(unit => unit.Depots.AsQueryable(), 
+                Times.Never);
             mockUnit.Verify(unit => unit.Depots.Add(It.IsAny<Depot>()), 
                 Times.Never);
             mockUnit.Verify(unit => unit.Commit(), 
@@ -124,7 +146,8 @@ namespace ef_core_example.Tests
                 ContactName = "Name",
                 DeliveryAddress = ValidAddress,
                 BillingAddress = ValidAddress,
-                ContactEmail = "mail@mail.net"
+                ContactEmail = "mail@mail.net",
+                DepotId = "A"
             };
     }
 }

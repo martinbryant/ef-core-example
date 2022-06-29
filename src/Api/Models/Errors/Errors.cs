@@ -54,5 +54,12 @@ namespace ef_core_example.Models
             public static Error NameIsTooLong(string name) =>
                 new Error("profile.name.is.invalid", $"Profile name `{name} is too long");
         }
+
+        public static class Depot
+        {
+            public const string Depot_Already_Exists = "depot.already.exists";
+            public static Error DepotAlreadyExists(string depotId) =>
+                new Error(Depot_Already_Exists, $"Depot `{depotId}` already exists");
+        }
     }
 }

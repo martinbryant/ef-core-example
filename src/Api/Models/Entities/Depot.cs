@@ -56,7 +56,7 @@ namespace ef_core_example.Models
         //     var email = Email.Create(depotDto?.ContactEmail);
         // }
 
-        internal static Result<Depot, Error> Create(DepotDto depotDto, Profile profile)
+        public static Result<Depot, Error> Create(DepotDto depotDto, Profile profile)
         {
             var delivery = Address.Create(depotDto.DeliveryAddress);
 

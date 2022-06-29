@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ef_core_example.Models;
 using GoldMarketplace.ServerAPIService.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace ef_core_example.Logic
 {
@@ -28,6 +30,7 @@ namespace ef_core_example.Logic
         {
             return await _profile.GetProfile(depotDto.ProfileId)
                                     .Bind(profile => Depot.Create(depotDto, profile))
+                                    .Ensure(DepotIsUnique, Errors.Depot.DepotAlreadyExists(depotDto.DepotId))
                                     .Tap(_unit.Depots.Add)
                                     .Tap(_unit.Commit);
         }
@@ -50,6 +53,14 @@ namespace ef_core_example.Logic
             return Guid.TryParse(id, out Guid identifier)
                 ? await GetDepot(identifier)
                 : Errors.General.InvalidId(nameof(Depot), id);
+        }
+
+        private async Task<bool> DepotIsUnique(Depot depot)
+        {
+            var exists = await _unit.Depots.AsQueryable()
+                                        .AnyAsync(dep => dep.DepotId == depot.DepotId);
+
+            return exists == false;
         }
     }
 }

@@ -25,6 +25,8 @@ namespace GoldMarketplace.ServerAPIService.Repositories
         Task<IEnumerable<TEntity>> Find(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = null);
+
+        IQueryable<TEntity> AsQueryable();
     }
 
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
@@ -85,8 +87,13 @@ namespace GoldMarketplace.ServerAPIService.Repositories
             }
             else
             {
-                return await query.ToListAsync ();
+                return await query.ToListAsync();
             }
+        }
+
+        public virtual IQueryable<TEntity> AsQueryable()
+        {
+            return _context.Set<TEntity>();
         }
     }
 }
