@@ -10,12 +10,6 @@ namespace GoldMarketplace.ServerAPIService.Repositories
         IProfileRepository Profiles { get; }
 
         IDepotRepository Depots { get; }
-
-        IManufacturerRepository Manufacturers { get; }
-
-        IListingRepository Listings { get; }
-
-        ITransactionRepository Transactions { get; }
         IOrderRepository Orders { get; }
 
         Task Commit();
@@ -28,12 +22,6 @@ namespace GoldMarketplace.ServerAPIService.Repositories
         private IProfileRepository _profileRepository;
 
         private IDepotRepository _depotRepository;
-
-        private IManufacturerRepository _manufacturerRepository;
-
-        private IListingRepository _listingRepository;
-
-        private ITransactionRepository _transactionRepository;
         private IOrderRepository _orderRepository;
 
         public UnitOfWork(AppDbContext context)
@@ -41,16 +29,40 @@ namespace GoldMarketplace.ServerAPIService.Repositories
             _context = context;
         }
         //Do assignments to the private fields here 
-        public IProfileRepository Profiles => _profileRepository ?? new ProfileRepository(_context);
+        public IProfileRepository Profiles
+        {
+            get 
+            {
+                if(_profileRepository == null)
+                {
+                    _profileRepository = new ProfileRepository(_context);
+                }
+                return _profileRepository;
+            }
+        }
 
-        public IDepotRepository Depots => _depotRepository ?? new DepotRepository(_context);
-
-        public IManufacturerRepository Manufacturers => _manufacturerRepository ?? new ManufacturerRepository(_context);
-
-        public IListingRepository Listings => _listingRepository ?? new ListingRepository(_context);
-
-        public ITransactionRepository Transactions => _transactionRepository ?? new TransactionRepository(_context);
-        public IOrderRepository Orders => _orderRepository ?? new OrderRepository(_context);
+        public IDepotRepository Depots
+        {
+            get 
+            {
+                if(_depotRepository == null)
+                {
+                    _depotRepository = new DepotRepository(_context);
+                }
+                return _depotRepository;
+            }
+        }
+        public IOrderRepository Orders
+        {
+            get
+            {
+                if(_orderRepository == null)
+                {
+                    _orderRepository = new OrderRepository(_context);
+                }
+                return _orderRepository;
+            }
+        }
 
 
 

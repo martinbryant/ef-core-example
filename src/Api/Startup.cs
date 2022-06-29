@@ -43,7 +43,8 @@ namespace ef_core_example
             services.AddDbContext<AppDbContext>(
                 options =>
                 {
-                    options.UseMySQL(Configuration["ConnectionStrings:DefaultConnection"]);
+                    var conn = Configuration["ConnectionStrings:DefaultConnection"];
+                    options.UseMySql(conn, new MariaDbServerVersion(new System.Version(10,0)));
                     options.EnableSensitiveDataLogging();
                 });
 

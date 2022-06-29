@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ef_core_example;
 using ef_core_example.Logic;
 using GoldMarketplace.ServerAPIService.Repositories;
@@ -33,7 +29,8 @@ namespace Worker
                     services.AddDbContext<AppDbContext>(
                         options =>
                         {
-                            options.UseMySQL(Configuration["ConnectionStrings:DefaultConnection"]);
+                            var conn = Configuration["ConnectionStrings:DefaultConnection"];
+                            options.UseMySql(conn, new MariaDbServerVersion(new System.Version(10,0)));
                             options.EnableSensitiveDataLogging();
                         }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
