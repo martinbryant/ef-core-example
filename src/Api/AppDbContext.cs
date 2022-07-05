@@ -21,20 +21,6 @@ namespace ef_core_example
             Database.EnsureCreated();
         }
 
-        public virtual DbSet<Profile> Profiles { get; set; }
-
-        public virtual DbSet<Depot> Depots { get; set; }
-
-        public virtual DbSet<Order> Orders { get; set; }
-
-        // public virtual DbSet<Listing> Listings { get; set; }
-
-        // public virtual DbSet<Transaction> Transactions { get; set; }
-
-        // public virtual DbSet<Manufacturer> Manufacturers { get; set; }
-
-        // public virtual DbSet<History> History { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Order>(order =>
