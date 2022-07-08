@@ -19,11 +19,13 @@ namespace ef_core_example.Logic
     {
         private readonly IUnitOfWork _unit;
         private readonly IProfileLogic _profile;
+        private readonly IDepotRepository _depots;
 
-        public DepotLogic(IUnitOfWork unit, IProfileLogic profile)
+        public DepotLogic(IUnitOfWork unit, IProfileLogic profile, IDepotRepository depots)
         {
             _unit = unit;
             _profile = profile;
+            _depots = depots;
         }
 
         public async Task<Result<Depot, Error>> CreateDepot(DepotDto depotDto)
@@ -57,8 +59,7 @@ namespace ef_core_example.Logic
 
         private async Task<bool> DepotIsUnique(Depot depot)
         {
-            var exists = await _unit.Depots.AsQueryable()
-                                        .AnyAsync(dep => dep.DepotId == depot.DepotId);
+            var exists = await _depots.DepotExists(depot);
 
             return exists == false;
         }

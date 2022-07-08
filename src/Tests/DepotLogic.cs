@@ -22,27 +22,32 @@ namespace ef_core_example.Tests
             //Arrange
             var mockProfile = _mock.GetMock<IProfileLogic>();
             var mockUnit    = _mock.GetMock<IUnitOfWork>();
+            var mockDepots  = _mock.GetMock<IDepotRepository>();
 
             mockProfile.Setup(profile => profile.GetProfile(It.IsAny<string>()))
                         .ReturnsAsync(Profile.Create("valid"));
 
             mockUnit.Setup(unit => unit.Commit());
             mockUnit.Setup(unit => unit.Depots.Add(It.IsAny<Depot>()));
+
+            mockDepots.Setup(depots => depots.DepotExists(It.IsAny<Depot>()))
+                        .ReturnsAsync(false);
             
             var existingDepotDto = ValidDepotDto;
             existingDepotDto.DepotId = "B";
             
-            var existingDepot = Depot.Create(existingDepotDto, Profile.Create("Valid").Value).Value;
+            // var existingDepot = Depot.Create(existingDepotDto, Profile.Create("Valid").Value).Value;
 
-            var depots = new List<Depot>()
-            {
-                existingDepot
-            };
+            // var depots = new List<Depot>()
+            // {
+            //     existingDepot
+            // };
 
-            var mockDepotQueryable = depots.BuildMock();
+            // var mockDepotQueryable = depots.BuildMock();
 
-            mockUnit.Setup(unit => unit.Depots.AsQueryable())
-                    .Returns(mockDepotQueryable);
+            // mockUnit.Setup(unit => unit.Depots.AsQueryable())
+            //         .Returns(mockDepotQueryable);
+            
             
             var logic = _mock.CreateInstance<DepotLogic>();
 
@@ -55,7 +60,9 @@ namespace ef_core_example.Tests
             Assert.True(result.IsSuccess);
             mockProfile.Verify(profile => profile.GetProfile(It.IsAny<string>()),
                 Times.Once);
-            mockUnit.Verify(unit => unit.Depots.AsQueryable(), 
+            // mockUnit.Verify(unit => unit.Depots.AsQueryable(), 
+            //     Times.Once);
+            mockDepots.Verify(depots => depots.DepotExists(It.IsAny<Depot>()), 
                 Times.Once);
             mockUnit.Verify(unit => unit.Depots.Add(It.IsAny<Depot>()), 
                 Times.Once);
@@ -70,26 +77,30 @@ namespace ef_core_example.Tests
             //Arrange
             var mockProfile = _mock.GetMock<IProfileLogic>();
             var mockUnit    = _mock.GetMock<IUnitOfWork>();
+            var mockDepots  = _mock.GetMock<IDepotRepository>();
 
             mockProfile.Setup(profile => profile.GetProfile(It.IsAny<string>()))
                         .ReturnsAsync(Profile.Create("valid"));
 
             mockUnit.Setup(unit => unit.Commit());
             mockUnit.Setup(unit => unit.Depots.Add(It.IsAny<Depot>()));
+
+            mockDepots.Setup(depots => depots.DepotExists(It.IsAny<Depot>()))
+                        .ReturnsAsync(true);
             
             var existingDepotDto = ValidDepotDto;
             
             var existingDepot = Depot.Create(existingDepotDto, Profile.Create("Valid").Value).Value;
 
-            var depots = new List<Depot>()
-            {
-                existingDepot
-            };
+            // var depots = new List<Depot>()
+            // {
+            //     existingDepot
+            // };
 
-            var mockDepotQueryable = depots.BuildMock();
+            // var mockDepotQueryable = depots.BuildMock();
 
-            mockUnit.Setup(unit => unit.Depots.AsQueryable())
-                    .Returns(mockDepotQueryable);
+            // mockUnit.Setup(unit => unit.Depots.AsQueryable())
+            //         .Returns(mockDepotQueryable);
             
             var logic = _mock.CreateInstance<DepotLogic>();
 
@@ -102,7 +113,9 @@ namespace ef_core_example.Tests
             Assert.Equal(Errors.Depot.Depot_Already_Exists, result.Error.Code);
             mockProfile.Verify(profile => profile.GetProfile(It.IsAny<string>()),
                 Times.Once);
-            mockUnit.Verify(unit => unit.Depots.AsQueryable(), 
+            // mockUnit.Verify(unit => unit.Depots.AsQueryable(), 
+            //     Times.Once);
+            mockDepots.Verify(depots => depots.DepotExists(It.IsAny<Depot>()), 
                 Times.Once);
             mockUnit.Verify(unit => unit.Depots.Add(It.IsAny<Depot>()), 
                 Times.Never);

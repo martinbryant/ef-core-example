@@ -22,30 +22,36 @@ namespace ef_core_example.Logic
 
     public class ProfileLogic : IProfileLogic
     {
-        private readonly IUnitOfWork _unit;
+        private readonly AppDbContext _context;
+        private readonly IProfileRepository _profiles;
+        private readonly IOrderRepository _orders;
 
-        public ProfileLogic(IUnitOfWork unit)
+        public ProfileLogic(
+            IProfileRepository profiles,
+            IOrderRepository orders
+            )
         {
-            _unit = unit;
+            _profiles = profiles;
+            _orders = orders;
         }
 
         public async Task<Result<Profile, Error>> CreateProfile(MarketplaceProfile profileDto)
         {
             return await Profile.Create(profileDto.Name)
-                                .Tap(_unit.Profiles.Add)
-                                .Tap(_unit.Commit);
+                                .Tap(_profiles.Add)
+                                .Tap(profile => _context.SaveChangesAsync());
         }
 
         public async Task<Result<Profile, Error>> UpdateProfile(MarketplaceProfile profileDto)
         {
             return await GetProfile(profileDto.Id)
                             .Bind(profile => Profile.EditName(profile, profileDto.Name))
-                            .Tap(_unit.Commit);
+                            .Tap(profile => _context.SaveChangesAsync());
         }
 
         public async Task<Result<Profile, Error>> GetProfile(Guid id)
         {
-            return await _unit.Profiles.Get(id)
+            return await _profiles.Get(id)
                             .ToResult(Errors.General.NotFound(nameof(Profile), id));
         }
 
@@ -58,7 +64,7 @@ namespace ef_core_example.Logic
 
         public async Task<Result<IEnumerable<Order>, Error>> GetOldOrders()
         {
-            return await _unit.Orders.GetOldReserved()
+            return await _orders.GetOldReserved()
                             .ToResult();
         }
     }
