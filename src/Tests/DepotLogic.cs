@@ -33,25 +33,11 @@ namespace ef_core_example.Tests
             mockDepots.Setup(depots => depots.DepotExists(It.IsAny<Depot>()))
                         .ReturnsAsync(false);
             
-            var existingDepotDto = ValidDepotDto;
-            existingDepotDto.DepotId = "B";
-            
-            // var existingDepot = Depot.Create(existingDepotDto, Profile.Create("Valid").Value).Value;
-
-            // var depots = new List<Depot>()
-            // {
-            //     existingDepot
-            // };
-
-            // var mockDepotQueryable = depots.BuildMock();
-
-            // mockUnit.Setup(unit => unit.Depots.AsQueryable())
-            //         .Returns(mockDepotQueryable);
-            
+            var existingDepotDto = DepotTests.ValidDepotDto;
             
             var logic = _mock.CreateInstance<DepotLogic>();
 
-            var depotDto = ValidDepotDto;
+            var depotDto = DepotTests.ValidDepotDto;
 
             //Act
             var result = await logic.CreateDepot(depotDto);
@@ -88,7 +74,7 @@ namespace ef_core_example.Tests
             mockDepots.Setup(depots => depots.DepotExists(It.IsAny<Depot>()))
                         .ReturnsAsync(true);
             
-            var existingDepotDto = ValidDepotDto;
+            var existingDepotDto = DepotTests.ValidDepotDto;
             
             var existingDepot = Depot.Create(existingDepotDto, Profile.Create("Valid").Value).Value;
 
@@ -104,13 +90,14 @@ namespace ef_core_example.Tests
             
             var logic = _mock.CreateInstance<DepotLogic>();
 
-            var depotDto = ValidDepotDto;
+            var depotDto = DepotTests.ValidDepotDto;
 
             //Act
             var result = await logic.CreateDepot(depotDto);
 
             //Assert
             Assert.Equal(Errors.Depot.Depot_Already_Exists, result.Error.Code);
+            
             mockProfile.Verify(profile => profile.GetProfile(It.IsAny<string>()),
                 Times.Once);
             // mockUnit.Verify(unit => unit.Depots.AsQueryable(), 
@@ -139,7 +126,7 @@ namespace ef_core_example.Tests
             
             var logic = _mock.CreateInstance<DepotLogic>();
 
-            var depotDto = ValidDepotDto;
+            var depotDto = DepotTests.ValidDepotDto;
 
             //Act
             var result = await logic.CreateDepot(depotDto);
@@ -172,7 +159,7 @@ namespace ef_core_example.Tests
             
             var logic = _mock.CreateInstance<DepotLogic>();
 
-            var depotDto = ValidDepotDto;
+            var depotDto = DepotTests.ValidDepotDto;
             depotDto.ContactEmail = null;
 
             //Act
@@ -190,24 +177,5 @@ namespace ef_core_example.Tests
                 Times.Never);
 
         }
-
-        public AddressDto ValidAddress => 
-            new AddressDto()
-            {
-                Address1 = "valid",
-                Address2 = "valid",
-                PostCode = "valid"
-            };
-
-        public DepotDto ValidDepotDto =>
-            new DepotDto()
-            {
-                DisplayName = "Name",
-                ContactName = "Name",
-                DeliveryAddress = ValidAddress,
-                BillingAddress = ValidAddress,
-                ContactEmail = "mail@mail.net",
-                DepotId = "A"
-            };
     }
 }
