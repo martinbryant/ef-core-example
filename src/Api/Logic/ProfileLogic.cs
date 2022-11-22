@@ -6,17 +6,19 @@ using CSharpFunctionalExtensions;
 using ef_core_example.Models;
 using GoldMarketplace.ServerAPIService.Repositories;
 
+using ProfileResult = CSharpFunctionalExtensions.Result<ef_core_example.Models.Profile, ef_core_example.Models.Error>;
+
 namespace ef_core_example.Logic
 {
     public interface IProfileLogic
     {
-        Task<Result<Profile, Error>> GetProfile(Guid id);
+        Task<ProfileResult> GetProfile(Guid id);
 
-        Task<Result<Profile, Error>> GetProfile(string id);
+        Task<ProfileResult> GetProfile(string id);
 
-        Task<Result<Profile, Error>> CreateProfile(MarketplaceProfile profileDto);
+        Task<ProfileResult> CreateProfile(MarketplaceProfile profileDto);
 
-        Task<Result<Profile, Error>> UpdateProfile(MarketplaceProfile profileDto);
+        Task<ProfileResult> UpdateProfile(MarketplaceProfile profileDto);
 
         Task<Result<IEnumerable<Order>, Error>> GetOldOrders();
     }
@@ -39,7 +41,7 @@ namespace ef_core_example.Logic
             _unit = unit;
         }
 
-        public async Task<Result<Profile, Error>> CreateProfile(MarketplaceProfile profileDto)
+        public async Task<ProfileResult> CreateProfile(MarketplaceProfile profileDto)
         {
             return await GetProfileByName(profileDto.Name)
                                 .Ensure(profile => profile is null, Errors.Profile.Exists(profileDto))
@@ -48,27 +50,27 @@ namespace ef_core_example.Logic
                                 .Tap(_unit.Commit);
         }
 
-        public async Task<Result<Profile, Error>> UpdateProfile(MarketplaceProfile profileDto)
+        public async Task<ProfileResult> UpdateProfile(MarketplaceProfile profileDto)
         {
             return await GetProfile(profileDto.Id)
                             .Bind(profile => Profile.EditName(profile, profileDto.Name))
                             .Tap(profile => _context.SaveChangesAsync());
         }
 
-        public async Task<Result<Profile, Error>> GetProfile(Guid id)
+        public async Task<ProfileResult> GetProfile(Guid id)
         {
             return await _profiles.Get(id)
                             .ToResult(Errors.General.NotFound(nameof(Profile), id));
         }
 
-        public async Task<Result<Profile, Error>> GetProfile(string id)
+        public async Task<ProfileResult> GetProfile(string id)
         {
             return Guid.TryParse(id, out Guid identifier)
                 ? await GetProfile(identifier)
                 : Errors.General.InvalidId(nameof(Profile), id);
         }
 
-        public async Task<Result<Profile, Error>> GetProfileByName(string name)
+        public async Task<ProfileResult> GetProfileByName(string name)
         {
             var profiles =  await _unit.Profiles.Find(profile => profile.Name == name);
 
