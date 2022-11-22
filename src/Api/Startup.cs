@@ -48,6 +48,9 @@ namespace ef_core_example
                     options.EnableSensitiveDataLogging();
                 });
 
+            services.AddTransient<IProfileRepository, ProfileRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProfileLogic, ProfileLogic>();
             services.AddScoped<IDepotLogic, DepotLogic>();

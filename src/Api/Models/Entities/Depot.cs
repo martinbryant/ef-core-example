@@ -58,16 +58,16 @@ namespace ef_core_example.Models
 
         public static Result<Depot, Error> Create(DepotDto depotDto, Profile profile)
         {
-            var delivery = Address.Create(depotDto.DeliveryAddress);
+            var delivery = Address.Create(depotDto?.DeliveryAddress);
 
-            var billing = Address.Create(depotDto.BillingAddress);
+            var billing = Address.Create(depotDto?.BillingAddress);
 
-            var contactEmail = Email.Create(depotDto.ContactEmail);
+            var contactEmail = Email.Create(depotDto?.ContactEmail);
 
-            var depotId         = depotDto.DepotId;
-            var displayName     = depotDto.DisplayName;
-            var contactName     = depotDto.ContactName;
-            var contactPhone    = depotDto.ContactPhone;
+            var depotId         = depotDto?.DepotId;
+            var displayName     = depotDto?.DisplayName;
+            var contactName     = depotDto?.ContactName;
+            var contactPhone    = depotDto?.ContactPhone;
 
             return delivery
                     .Bind(_ => billing)

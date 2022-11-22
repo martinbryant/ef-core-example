@@ -23,10 +23,19 @@ namespace ef_core_example.Logic
 
     public class ProfileLogic : IProfileLogic
     {
+        private readonly AppDbContext _context;
+        private readonly IProfileRepository _profiles;
+        private readonly IOrderRepository _orders;
         private readonly IUnitOfWork _unit;
 
-        public ProfileLogic(IUnitOfWork unit)
+        public ProfileLogic(
+            IProfileRepository profiles,
+            IOrderRepository orders,
+            IUnitOfWork unit
+            )
         {
+            _profiles = profiles;
+            _orders = orders;
             _unit = unit;
         }
 
@@ -43,12 +52,12 @@ namespace ef_core_example.Logic
         {
             return await GetProfile(profileDto.Id)
                             .Bind(profile => Profile.EditName(profile, profileDto.Name))
-                            .Tap(_unit.Commit);
+                            .Tap(profile => _context.SaveChangesAsync());
         }
 
         public async Task<Result<Profile, Error>> GetProfile(Guid id)
         {
-            return await _unit.Profiles.Get(id)
+            return await _profiles.Get(id)
                             .ToResult(Errors.General.NotFound(nameof(Profile), id));
         }
 
@@ -68,7 +77,7 @@ namespace ef_core_example.Logic
 
         public async Task<Result<IEnumerable<Order>, Error>> GetOldOrders()
         {
-            return await _unit.Orders.GetOldReserved()
+            return await _orders.GetOldReserved()
                             .ToResult();
         }
     }

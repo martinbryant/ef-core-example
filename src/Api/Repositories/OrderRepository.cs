@@ -21,7 +21,7 @@ namespace GoldMarketplace.ServerAPIService.Repositories
 
         public async Task<IEnumerable<Order>> GetOldReserved()
         {
-            return await _context.Orders
+            return await _context.Set<Order>()
                                     .FromSqlRaw("Select * from test.order group by Status having max(status);")
                                     .ToListAsync();
         }

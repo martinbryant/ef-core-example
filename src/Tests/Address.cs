@@ -38,7 +38,7 @@ namespace ef_core_example.Tests
         }
 
         [Fact(DisplayName = "[Address] - Invalid dto")]
-        public void InvalidAddressDto()
+        public void InvalidAddressNull()
         {
            var addressDto   = default(AddressDto);
            var expected     = Errors.General.Value_Is_Required;
@@ -149,7 +149,11 @@ namespace ef_core_example.Tests
             var range     = Enumerable.Repeat("X", length);
             return string.Join("", range);
         }
-    }
 
+        public static AddressDto ValidAddressDto =>
+            (AddressDto)AddressTests.ValidAddressData.FirstOrDefault()?.FirstOrDefault()!; 
+
+    }
+    
     
 }
