@@ -146,8 +146,7 @@ namespace ef_core_example.Tests
 
         public static string CreateString(int length)
         {
-            var range     = Enumerable.Range(0, length)
-                                        .Select(num => "X");
+            var range     = Enumerable.Repeat("X", length);
             return string.Join("", range);
         }
     }
