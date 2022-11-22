@@ -25,7 +25,6 @@ namespace ef_core_example.Logic
 
     public class ProfileLogic : IProfileLogic
     {
-        private readonly AppDbContext _context;
         private readonly IProfileRepository _profiles;
         private readonly IOrderRepository _orders;
         private readonly IUnitOfWork _unit;
@@ -54,7 +53,7 @@ namespace ef_core_example.Logic
         {
             return await GetProfile(profileDto.Id)
                             .Bind(profile => Profile.EditName(profile, profileDto.Name))
-                            .Tap(profile => _context.SaveChangesAsync());
+                            .Tap(_unit.Commit);
         }
 
         public async Task<ProfileResult> GetProfile(Guid id)
