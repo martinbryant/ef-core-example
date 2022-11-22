@@ -12,6 +12,7 @@ namespace ef_core_example.Tests
         [InlineData("mail@mail.net")]
         [InlineData("mail@mail.net     ")]
         [InlineData("     mail@mail.net")]
+        [InlineData("     mail@mail.net       ")]
         [Theory(DisplayName = "[Email] - creates an email")]
         public void ValidEmail(string givenEmail)
         {

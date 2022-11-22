@@ -21,23 +21,23 @@ namespace ef_core_example.Models
             yield return Code;
         }
 
-        public string Serialize()
-        {
-            return $"{Code}{Separator}{Message}";
-        }
+        // public string Serialize()
+        // {
+        //     return $"{Code}{Separator}{Message}";
+        // }
 
-        public static Error Deserialize(string serialized)
-        {
-            string[] data = serialized.Split(
-                new[] { Separator },
-                StringSplitOptions.RemoveEmptyEntries);
+        // public static Error Deserialize(string serialized)
+        // {
+        //     string[] data = serialized.Split(
+        //         new[] { Separator },
+        //         StringSplitOptions.RemoveEmptyEntries);
             
-            string fieldName = data[1].Trim('$').Trim('.');
+        //     string fieldName = data[1].Trim('$').Trim('.');
 
-            // Guard.Require(data.Length >= 2, $"Invalid error serialization: '{serialized}'");
+        //     // Guard.Require(data.Length >= 2, $"Invalid error serialization: '{serialized}'");
 
-            return new Error(data[0], fieldName);
-        }
+        //     return new Error(data[0], fieldName);
+        // }
     }
 
 }

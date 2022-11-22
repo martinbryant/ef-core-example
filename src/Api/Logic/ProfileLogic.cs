@@ -43,7 +43,7 @@ namespace ef_core_example.Logic
         public async Task<ProfileResult> CreateProfile(MarketplaceProfile profileDto)
         {
             return await GetProfileByName(profileDto.Name)
-                                .Ensure(profile => profile is null, Errors.Profile.Exists(profileDto))
+                                .Ensure(profile => profile is null, Errors.Profile.Exists(profileDto.Name))
                                 .Bind(_ => Profile.Create(profileDto.Name))
                                 .Tap(_unit.Profiles.Add)
                                 .Tap(_unit.Commit);

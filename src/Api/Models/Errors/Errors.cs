@@ -17,16 +17,16 @@ namespace ef_core_example.Models
             public static Error NotFound(string entityName, Guid id) => 
                 new Error(Record_Not_Found, $"`{entityName}` with an id `{id}` does not exist");
 
-            internal static Error ValueIsRequired(string type) =>
+            public static Error ValueIsRequired(string type) =>
                 new Error(Value_Is_Required, $"a value is required for type `{type}`");
 
-            internal static Error ValueIsTooLong(string type, string value) =>
+            public static Error ValueIsTooLong(string type, string value) =>
                 new Error(Value_Is_Too_Long, $"value `{value}` is too long for type `{type}`");
 
-            internal static Error ValueIsInvalid(string type, string value) => 
+            public static Error ValueIsInvalid(string type, string value) => 
                 new Error(Value_Is_Invalid, $"value `{value}` is invalid for type `{type}`");
 
-            public static Error Exception(AggregateException exception)
+            internal static Error Exception(AggregateException exception)
             {
                 MySqlException sqlException = default;
                 if(exception.InnerException is DbUpdateException dbex)
@@ -43,21 +43,15 @@ namespace ef_core_example.Models
 
             private static Error ExceptionError(MySqlException ex) => 
                 new Error("sql.exception", $"{ex.Message}");
-            internal static Error InvalidId(string entityName, string id) =>
+            public static Error InvalidId(string entityName, string id) =>
                 new Error(Id_Is_Invalid, $"An id of `{id}` is not valid for a `{entityName}`");
         }
         public static class Profile
         {
-            public static Error NameIsInvalid(string name) =>
-                new Error("profile.name.is.invalid", $"Profile name `{name}` is invalid");
+            public const string Profile_Already_Exists = "profile.already.exists";
 
-            public static Error NameIsTooLong(string name) =>
-                new Error("profile.name.is.invalid", $"Profile name `{name} is too long");
-
-            internal static Error Exists(MarketplaceProfile profileDto)
-            {
-                throw new NotImplementedException();
-            }
+            public static Error Exists(string name) =>
+                new Error(Profile_Already_Exists, $"Profile `{name}` already exists"); 
         }
 
         public static class Depot

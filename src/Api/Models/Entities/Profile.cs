@@ -30,10 +30,10 @@ namespace ef_core_example.Models
         private static Result<string, Error> ValidateName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return Errors.Profile.NameIsInvalid(name);
+                return Errors.General.ValueIsInvalid(nameof(Profile), name);
 
             if (name.Length > Max_Profile_Name_Length)
-                return Errors.Profile.NameIsTooLong(name);
+                return Errors.General.ValueIsTooLong(nameof(Profile), name);
 
             return name;
         }
