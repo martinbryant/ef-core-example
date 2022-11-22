@@ -41,12 +41,13 @@ namespace ef_core_example.Logic
                             .ToResult(Errors.General.NotFound(nameof(Depot), id));
         }
 
-        // public async Task<Result<Depot, Error>> UpdateDepot(DepotDto depotDto)
-        // {
-        //     return await GetDepot(depotDto.Id)
-        //                     .Check(depot => Depot.EditDepot(depot, depotDto))
-        //                     .Check(_unit.Commit);
-        // }
+        public async Task<Result<Depot, Error>> UpdateDepot(Guid id, DepotDto depotDto)
+        {
+            return await GetDepot(id)
+                            .Bind(depot => Depot.Update(depot, depotDto))
+                            .Ensure(DepotIsUnique, Errors.Depot.DepotAlreadyExists(depotDto.DepotId))
+                            .Tap(_unit.Commit);
+        }
 
         private async Task<Result<Depot, Error>> GetDepot(string id)
         {

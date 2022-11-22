@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ef_core_example.Models;
@@ -31,7 +32,9 @@ namespace ef_core_example.Logic
 
         public async Task<Result<Profile, Error>> CreateProfile(MarketplaceProfile profileDto)
         {
-            return await Profile.Create(profileDto.Name)
+            return await GetProfileByName(profileDto.Name)
+                                .Ensure(profile => profile is null, Errors.Profile.Exists(profileDto))
+                                .Bind(_ => Profile.Create(profileDto.Name))
                                 .Tap(_unit.Profiles.Add)
                                 .Tap(_unit.Commit);
         }
@@ -54,6 +57,13 @@ namespace ef_core_example.Logic
             return Guid.TryParse(id, out Guid identifier)
                 ? await GetProfile(identifier)
                 : Errors.General.InvalidId(nameof(Profile), id);
+        }
+
+        public async Task<Result<Profile, Error>> GetProfileByName(string name)
+        {
+            var profiles =  await _unit.Profiles.Find(profile => profile.Name == name);
+
+            return profiles.FirstOrDefault();
         }
 
         public async Task<Result<IEnumerable<Order>, Error>> GetOldOrders()

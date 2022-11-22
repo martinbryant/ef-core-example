@@ -53,6 +53,11 @@ namespace ef_core_example.Models
 
             public static Error NameIsTooLong(string name) =>
                 new Error("profile.name.is.invalid", $"Profile name `{name} is too long");
+
+            internal static Error Exists(MarketplaceProfile profileDto)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public static class Depot
