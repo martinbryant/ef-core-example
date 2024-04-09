@@ -53,7 +53,7 @@ namespace ef_core_example
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProfileLogic, ProfileLogic>();
-            services.AddScoped<IDepotLogic, DepotLogic>();
+            // services.AddScoped<IDepotLogic, DepotLogic>();
 
             services.AddHttpContextAccessor();
         }
